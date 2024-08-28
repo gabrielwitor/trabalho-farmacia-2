@@ -21,8 +21,14 @@ Arvore* InsereArvoreMedicamento(Arvore* arv, Medicamento* med, FILE* file_pointe
 /* Retira um medicamento de uma determinada árvore. */
 Arvore* RetiraArvoreMedicamento(Arvore* arv, int id_medicamento, FILE* file_pointer);
 
+/* Atualiza o preço de um medicamento na árvore */
+Arvore* AtualizaArvoreMedicamento(Arvore* arv, int id_medicamento, float valor, FILE* file_pointer);
+
+/* Busca um medicamento na árvore */
+Arvore* BuscaArvoreMedicamento(Arvore* arv, int id_medicamento);
+
 /* Verifica se um medicamento está presente em uma determinada árvore. */
-int VerificaArvoreMedicamento(Arvore* arv, int id_medicamento, FILE* file_pointer);
+int VerificaArvoreMedicamento(Arvore* arv, int id_medicamento);
 
 /* Verifica se existe um medicamento vencido em uma determinada árvore. */
 int VerificaArvoreValidade(Arvore* arv, int* data, FILE* file_pointer);

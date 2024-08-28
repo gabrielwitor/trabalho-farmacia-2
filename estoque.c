@@ -65,7 +65,134 @@ Arvore* InsereArvoreMedicamento(Arvore* arv, Medicamento* med, FILE* file_pointe
         arv->esq = InsereArvoreMedicamento(arv->esq, med, file_pointer);
 
     else if (med->codigo > arv->m->codigo)
-        arv->esq = InsereArvoreMedicamento(arv->dir, med, file_pointer);
+        arv->dir = InsereArvoreMedicamento(arv->dir, med, file_pointer);
         
     return arv;
+}
+
+Arvore* RetiraArvoreMedicamento(Arvore* arv, int id_medicamento, FILE* file_pointer){
+
+    if (arv == NULL){
+        fprintf(file_pointer,"MEDICAMENTO NAO ENCONTRADO NA LISTA\n");
+        return NULL;
+    }
+
+    else if(arv->m->codigo > id_medicamento){
+        arv-> esq = RetiraArvoreMedicamento(arv->esq, id_medicamento, file_pointer);
+    }
+
+    else if(arv->m->codigo < id_medicamento){
+        arv-> dir = RetiraArvoreMedicamento(arv->dir, id_medicamento, file_pointer);
+    }
+
+    else{ /* Nó a ser removido foi encontrado (arv->m->codigo == id_medicamento) */
+
+        /* Nó a ser removido não possui filhos. */
+        if(arv->esq == NULL && arv->dir == NULL){
+            fprintf(file_pointer,"MEDICAMENTO %s %d RETIRADO\n",arv->m->nome, id_medicamento);
+            free(arv->m);
+            free(arv);
+            return NULL;
+        }
+
+        /* Nó só tem filhos à direita. */
+        else if(arv->esq == NULL){
+            fprintf(file_pointer,"MEDICAMENTO %s %d RETIRADO\n",arv->m->nome, id_medicamento);
+            Arvore* temp = arv;
+            arv = arv->dir;
+            free(temp->m);
+            free(temp);
+        }
+ 
+        /* Nó só tem filhos à esquerda. */
+        else if(arv->dir == NULL){
+            fprintf(file_pointer,"MEDICAMENTO %s %d RETIRADO\n",arv->m->nome, id_medicamento);
+            Arvore* temp = arv;
+            arv = arv->esq;
+            free(temp->m);
+            free(temp);
+        }
+
+        /* Nó tem os dois filhos. */
+        else{
+            Arvore* filho = arv->esq;
+            while(filho->dir != NULL){
+                filho = filho->dir;
+            }
+
+            /* Trocando as informações. */
+            Medicamento* med_temp = arv->m;
+            arv->m = filho->m;
+            filho->m = med_temp;
+
+            arv->esq = RetiraArvoreMedicamento(arv->esq, id_medicamento, file_pointer);
+        }
+    }
+    return arv;
+}
+
+Arvore* AtualizaArvoreMedicamento(Arvore* arv, int id_medicamento, float valor, FILE* file_pointer){
+
+    Arvore* buscar = BuscaArvoreMedicamento(arv, id_medicamento);
+
+    if(buscar == NULL)
+        fprintf(file_pointer, "MEDICAMENTO %d ENCONTRADO NA ARVORE\n",id_medicamento);
+    else{
+        buscar->m->valor = valor;
+        fprintf(file_pointer,"PRECO ATUALIZADO %s %d %.1f\n",arv->m->nome, id_medicamento, valor);
+    }
+        
+    return arv;
+}
+
+Arvore* BuscaArvoreMedicamento(Arvore* arv, int id_medicamento){
+    if(arv == NULL)
+        return NULL;
+    else if (arv->m->codigo > id_medicamento)
+        return BuscaArvoreMedicamento(arv->esq, id_medicamento);
+    else if(arv->m->codigo < id_medicamento)
+        return BuscaArvoreMedicamento(arv->dir, id_medicamento);
+    else /* arv->m->codigo == id_medicamento */
+        return arv;
+}
+
+int VerificaArvoreMedicamento(Arvore* arv, int id_medicamento){
+    if(arv == NULL)
+        return 0; /* árvore vazia: não encontrou. */
+    else
+        return arv->m->codigo == id_medicamento || 
+        VerificaArvoreMedicamento(arv->esq, id_medicamento) || 
+        VerificaArvoreMedicamento(arv->dir, id_medicamento );
+}
+
+int VerificaArvoreValidade(Arvore* arv, int* data, FILE* file_pointer){
+    int vencido = 0;
+
+    if(arv != NULL){
+        
+
+        if(data[2] > arv->m->data[2]){ // Verificando o ano
+            vencido = 1;
+            
+        } else if(data[2] >= arv->m->data[2] && data[1] > arv->m->data[1]){ // Verificando o mês
+            vencido = 1;
+
+
+        } else if(data[2] >= arv->m->data[2] && data[1] >= arv->m->data[1] && data[0] > arv->m->data[0]){ // Verificando o dia
+            vencido = 1;
+
+        }
+        VerificaArvoreValidade(arv->esq, data, file_pointer);
+        if(vencido) fprintf(file_pointer,"MEDICAMENTO %s %d VENCIDO\n",arv->m->nome, arv->m->codigo);
+        VerificaArvoreValidade(arv->dir, data, file_pointer);
+    }
+    return vencido;
+}
+
+void ImprimeArvoreMedicamento(Arvore* arv, FILE* file_pointer){
+    if(arv != NULL){
+        ImprimeArvoreMedicamento(arv->esq, file_pointer);
+        fprintf(file_pointer,"%s %d %.1f %d %d %d\n",arv->m->nome,arv->m->codigo,arv->m->valor,arv->m->data[0],arv->m->data[1],arv->m->data[2]);
+        ImprimeArvoreMedicamento(arv->dir, file_pointer);
+    }
 }

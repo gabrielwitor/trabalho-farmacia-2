@@ -37,7 +37,6 @@ int main(int argc, char *argv[]){
     float valor;
     int data_de_validade[3];
     
-
     do{
         fscanf(arquivo_leitura,"%s",palavra_lida);
         printf("Palavra lida: %s\n",palavra_lida);
@@ -47,32 +46,46 @@ int main(int argc, char *argv[]){
             case 1: // Leitura: MEDICAMENTO 
                 fscanf(arquivo_leitura,"%s %d %f %d %d %d",nome, &codigo, &valor, &data_de_validade[0], &data_de_validade[1], &data_de_validade[2]);
                 arvore = InsereArvoreMedicamento(arvore, CriaMedicamento(nome, codigo, valor, data_de_validade), arquivo_escrita);
-
                 break;
 
             case 2: // Leitura: RETIRA
+                fscanf(arquivo_leitura,"%d",&codigo);
+                arvore = RetiraArvoreMedicamento(arvore, codigo, arquivo_escrita);
                 break;
 
-            case 3: // Leitura: IMPRIME_LISTA
+            case 3: // Leitura: IMPRIME_ARVORE
+                ImprimeArvoreMedicamento(arvore,arquivo_escrita);
                 break;
 
             case 4: // Leitura: ATUALIZA_PRECO
+                fscanf(arquivo_leitura,"%d %f", &codigo, &valor);
+                arvore = AtualizaArvoreMedicamento(arvore, codigo, valor, arquivo_escrita);
                 break;
 
             case 5: // Leitura: VERIFICA_VALIDADE
-
+                fscanf(arquivo_leitura,"%d %d %d", &data_de_validade[0], &data_de_validade[1], &data_de_validade[2]);
+                VerificaArvoreValidade(arvore, data_de_validade, arquivo_escrita);
                 break;
 
             case 6: // Leitura: VERIFICA_ARVORE
+                fscanf(arquivo_leitura,"%d",&codigo);
+                if(VerificaArvoreMedicamento(arvore, codigo))
+                    fprintf(arquivo_escrita, "MEDICAMENTO %d ENCONTRADO NA ARVORE\n",codigo);
+                else
+                    fprintf(arquivo_escrita, "MEDICAMENTO %d NÃO ENCONTRADO NA ARVORE\n",codigo);
+                break;
 
+            case 7: // Leitura: QUEBRA_LINHA
+                fprintf(arquivo_escrita, "\n");
                 break;
 
             default:
                 break;
         }
 
-    } while (ReconhecerPalavra(palavra_lida) != 7);
+    } while (ReconhecerPalavra(palavra_lida) != 8);
 
+    // Fechando os arquivos (necessário para salvar o texto).
     fclose(arquivo_leitura);
     fclose(arquivo_escrita);
 
@@ -80,4 +93,3 @@ int main(int argc, char *argv[]){
 
     return 0;
 }
-

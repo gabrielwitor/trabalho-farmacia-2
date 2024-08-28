@@ -34,7 +34,7 @@ int ReconhecerPalavra(char* palavra){
         return 1;
     } else if(!strcmp(palavra,"RETIRA")){
         return 2;
-    } else if(!strcmp(palavra,"IMPRIME_LISTA")){
+    } else if(!strcmp(palavra,"IMPRIME_ARVORE")){
         return 3;
     } else if(!strcmp(palavra,"ATUALIZA_PRECO")){
         return 4;
@@ -42,8 +42,10 @@ int ReconhecerPalavra(char* palavra){
         return 5;
     } else if(!strcmp(palavra,"VERIFICA_ARVORE")){
         return 6;
-    } else if(!strcmp(palavra,"FIM")){
-        return 7;
+    } else if(!strcmp(palavra,"QUEBRA_LINHA")){
+        return 7; 
+    }else if(!strcmp(palavra,"FIM")){
+        return 8;
     } 
     return -1;
 }
