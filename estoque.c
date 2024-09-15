@@ -182,9 +182,9 @@ int VerificaArvoreValidade(Arvore* arv, int* data, FILE* file_pointer){
             vencido = 1;
 
         }
-        VerificaArvoreValidade(arv->esq, data, file_pointer);
+        
         if(vencido) fprintf(file_pointer,"MEDICAMENTO %s %d VENCIDO\n",arv->m->nome, arv->m->codigo);
-        VerificaArvoreValidade(arv->dir, data, file_pointer);
+        return VerificaArvoreValidade(arv->esq, data, file_pointer) || VerificaArvoreValidade(arv->dir, data, file_pointer);
     }
     return vencido;
 }

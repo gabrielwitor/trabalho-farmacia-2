@@ -11,11 +11,12 @@ FILE* abreArquivoEscrita(char* caminho);
 -1 - Nenhuma palavra reconhecida
 1 - MEDICAMENTO
 2 - RETIRA
-3 - IMPRIME_LISTA
+3 - IMPRIME_ARVORE
 4 - ATUALIZA_PRECO
 5 - VERIFICA_VALIDADE
 6 - VERIFICA_ARVORE
-7 - FIM
+7 - QUEBRA_LINHA
+8 - FIM
 
 */
 int ReconhecerPalavra(char* palavra);
